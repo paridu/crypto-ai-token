@@ -1,6 +1,16 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import {
+  InsertUser,
+  users,
+  cryptoPrices,
+  InsertCryptoPrice,
+  predictions,
+  sentimentAnalysis,
+  userWatchlist,
+  tradingAlerts,
+  InsertTradingAlert,
+} from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +99,143 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Crypto Price queries
+export async function getCryptoPrices() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(cryptoPrices).orderBy(cryptoPrices.symbol);
+}
+
+export async function getCryptoPriceBySymbol(symbol: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(cryptoPrices)
+    .where(eq(cryptoPrices.symbol, symbol))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function upsertCryptoPrice(data: InsertCryptoPrice) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .insert(cryptoPrices)
+    .values(data)
+    .onDuplicateKeyUpdate({
+      set: {
+        currentPrice: data.currentPrice,
+        priceChange24h: data.priceChange24h,
+        priceChange7d: data.priceChange7d,
+        marketCap: data.marketCap,
+        volume24h: data.volume24h,
+        lastUpdated: new Date(),
+      },
+    });
+}
+
+// Prediction queries
+export async function getLatestPredictions() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(predictions)
+    .orderBy(predictions.cryptoSymbol, predictions.createdAt)
+    .limit(10);
+}
+
+export async function getPredictionsBySymbol(symbol: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(predictions)
+    .where(eq(predictions.cryptoSymbol, symbol))
+    .orderBy(predictions.predictionDate);
+}
+
+// Sentiment Analysis queries
+export async function getLatestSentimentAnalysis() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(sentimentAnalysis)
+    .orderBy(sentimentAnalysis.cryptoSymbol, sentimentAnalysis.createdAt)
+    .limit(10);
+}
+
+export async function getSentimentBySymbol(symbol: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(sentimentAnalysis)
+    .where(eq(sentimentAnalysis.cryptoSymbol, symbol))
+    .orderBy(sentimentAnalysis.createdAt)
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+// Watchlist queries
+export async function getUserWatchlist(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(userWatchlist)
+    .where(eq(userWatchlist.userId, userId));
+}
+
+export async function addToWatchlist(userId: number, cryptoSymbol: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(userWatchlist).values({ userId, cryptoSymbol });
+}
+
+export async function removeFromWatchlist(userId: number, cryptoSymbol: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .delete(userWatchlist)
+    .where(
+      and(
+        eq(userWatchlist.userId, userId),
+        eq(userWatchlist.cryptoSymbol, cryptoSymbol)
+      )
+    );
+}
+
+// Trading Alerts queries
+export async function getUserAlerts(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(tradingAlerts)
+    .where(eq(tradingAlerts.userId, userId))
+    .orderBy(tradingAlerts.createdAt);
+}
+
+export async function createAlert(data: InsertTradingAlert) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(tradingAlerts).values(data);
+}
+
+export async function deleteAlert(alertId: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(tradingAlerts).where(eq(tradingAlerts.id, alertId));
+}
+
+export async function updateAlertStatus(alertId: number, isActive: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .update(tradingAlerts)
+    .set({ isActive, updatedAt: new Date() })
+    .where(eq(tradingAlerts.id, alertId));
+}
