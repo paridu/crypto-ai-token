@@ -22,6 +22,8 @@
 - [x] Create alerts.getList procedure
 - [x] Create alerts.delete procedure
 - [x] Create alerts.updateStatus procedure
+- [x] Create arbitrage.getOpportunities procedure
+- [x] Create arbitrage.getByAsset procedure
 
 ## Frontend Pages & Components
 - [x] Create Dashboard page (market overview, predictions, sentiment)
@@ -30,6 +32,7 @@
 - [x] Create Market Sentiment Analysis component (sentiment score and indicators)
 - [x] Create Watchlist page (manage user's crypto watchlist)
 - [x] Create Trading Alerts page (manage trading alerts)
+- [x] Create Arbitrage Opportunities page (display arbitrage opportunities with sorting)
 - [ ] Create Price Chart component (display price history with chart)
 - [ ] Create Crypto Details page (detailed view for single crypto)
 

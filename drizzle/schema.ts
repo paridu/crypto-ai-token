@@ -108,3 +108,22 @@ export const tradingAlerts = mysqlTable("trading_alerts", {
 
 export type TradingAlert = typeof tradingAlerts.$inferSelect;
 export type InsertTradingAlert = typeof tradingAlerts.$inferInsert;
+
+export const arbitrageOpportunities = mysqlTable("arbitrage_opportunities", {
+  id: int("id").autoincrement().primaryKey(),
+  asset: varchar("asset", { length: 20 }).notNull(),
+  exchangeA: varchar("exchangeA", { length: 50 }).notNull(),
+  exchangeB: varchar("exchangeB", { length: 50 }).notNull(),
+  priceA: decimal("priceA", { precision: 20, scale: 8 }).notNull(),
+  priceB: decimal("priceB", { precision: 20, scale: 8 }).notNull(),
+  spread: decimal("spread", { precision: 10, scale: 2 }).notNull(),
+  potentialProfit: varchar("potentialProfit", { length: 50 }).notNull(),
+  profitMargin: decimal("profitMargin", { precision: 10, scale: 2 }).notNull(),
+  isActive: int("isActive").default(1).notNull(),
+  detectedAt: timestamp("detectedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ArbitrageOpportunity = typeof arbitrageOpportunities.$inferSelect;
+export type InsertArbitrageOpportunity = typeof arbitrageOpportunities.$inferInsert;

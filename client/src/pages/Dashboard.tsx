@@ -280,6 +280,11 @@ export default function Dashboard() {
                 Manage Alerts
               </Button>
             </Link>
+            <Link href="/arbitrage">
+              <Button size="lg" variant="outline">
+                Arbitrage Opportunities
+              </Button>
+            </Link>
           </div>
         )}
       </div>

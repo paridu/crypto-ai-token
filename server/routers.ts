@@ -17,6 +17,8 @@ import {
   createAlert,
   deleteAlert,
   updateAlertStatus,
+  getArbitrageOpportunities,
+  getArbitrageByAsset,
 } from "./db";
 
 export const appRouter = router({
@@ -117,6 +119,17 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         await updateAlertStatus(input.alertId, input.isActive);
         return { success: true };
+      }),
+  }),
+
+  arbitrage: router({
+    getOpportunities: publicProcedure.query(async () => {
+      return await getArbitrageOpportunities();
+    }),
+    getByAsset: publicProcedure
+      .input(z.object({ asset: z.string() }))
+      .query(async ({ input }) => {
+        return await getArbitrageByAsset(input.asset);
       }),
   }),
 });

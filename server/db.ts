@@ -10,6 +10,8 @@ import {
   userWatchlist,
   tradingAlerts,
   InsertTradingAlert,
+  arbitrageOpportunities,
+  InsertArbitrageOpportunity,
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -238,4 +240,44 @@ export async function updateAlertStatus(alertId: number, isActive: number) {
     .update(tradingAlerts)
     .set({ isActive, updatedAt: new Date() })
     .where(eq(tradingAlerts.id, alertId));
+}
+
+// Arbitrage Opportunities queries
+export async function getArbitrageOpportunities() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(arbitrageOpportunities)
+    .where(eq(arbitrageOpportunities.isActive, 1))
+    .orderBy(arbitrageOpportunities.profitMargin);
+}
+
+export async function getArbitrageByAsset(asset: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(arbitrageOpportunities)
+    .where(
+      and(
+        eq(arbitrageOpportunities.asset, asset),
+        eq(arbitrageOpportunities.isActive, 1)
+      )
+    );
+}
+
+export async function createArbitrageOpportunity(data: InsertArbitrageOpportunity) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(arbitrageOpportunities).values(data);
+}
+
+export async function updateArbitrageStatus(opportunityId: number, isActive: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .update(arbitrageOpportunities)
+    .set({ isActive, updatedAt: new Date() })
+    .where(eq(arbitrageOpportunities.id, opportunityId));
 }

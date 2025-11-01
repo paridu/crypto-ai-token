@@ -36,6 +36,10 @@ Click "View Watchlist" on the dashboard to access your personal watchlist. Here 
 
 Click "Manage Alerts" to create custom trading alerts. You can set alerts for three types of events: "Price Above" (notify when price exceeds a target), "Price Below" (notify when price drops below a target), or "Sentiment Change" (notify when market sentiment shifts). Each alert can be toggled active/inactive or deleted at any time.
 
+### Finding Arbitrage Opportunities
+
+Click "Arbitrage Opportunities" to view profitable trading opportunities across different exchanges. The page displays a table showing the asset, prices on different exchanges, the spread percentage, profit margin, and potential profit amount. You can sort opportunities by profit margin or spread to find the most profitable trades. Each opportunity shows the two exchanges involved and the potential profit in USD.
+
 ---
 
 ## Managing Your Website
