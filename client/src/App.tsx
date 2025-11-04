@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Watchlist from "./pages/Watchlist";
 import Alerts from "./pages/Alerts";
 import Arbitrage from "./pages/Arbitrage";
+import Trading from "./pages/Trading";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/watchlist" component={Watchlist} />
       <Route path="/alerts" component={Alerts} />
       <Route path="/arbitrage" component={Arbitrage} />
+      <Route path="/trading" component={Trading} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

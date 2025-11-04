@@ -2,6 +2,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { tradingRouter } from "./routers/tradingRouter";
 import { z } from "zod";
 import {
   getCryptoPrices,
@@ -132,6 +133,8 @@ export const appRouter = router({
         return await getArbitrageByAsset(input.asset);
       }),
   }),
+
+  trading: tradingRouter,
 });
 
 export type AppRouter = typeof appRouter;

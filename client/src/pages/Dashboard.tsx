@@ -285,6 +285,11 @@ export default function Dashboard() {
                 Arbitrage Opportunities
               </Button>
             </Link>
+            <Link href="/trading">
+              <Button size="lg" variant="default" className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
+                Automated Trading
+              </Button>
+            </Link>
           </div>
         )}
       </div>
