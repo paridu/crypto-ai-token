@@ -6,26 +6,28 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import MainLayout from "./components/MainLayout";
 import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/DashboardEnhanced";
 import Watchlist from "./pages/Watchlist";
 import Alerts from "./pages/Alerts";
 import Arbitrage from "./pages/Arbitrage";
-import Trading from "./pages/Trading";
+import Predictions from "./pages/Predictions";
 import Settings from "./pages/Settings";
 import Portfolio from "./pages/Portfolio";
-
+import CryptoDetails from "./pages/CryptoDetails";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <MainLayout>
       <Switch>
         <Route path="/" component={Dashboard} />
+        <Route path="/dashboard-old" component={Dashboard} />
         <Route path="/watchlist" component={Watchlist} />
         <Route path="/alerts" component={Alerts} />
         <Route path="/arbitrage" component={Arbitrage} />
-        <Route path="/trading" component={Trading} />
-        <Route path="/settings" component={Settings} />
+        <Route path="/predictions" component={Predictions} />
         <Route path="/portfolio" component={Portfolio} />
+        <Route path="/settings" component={Settings} />
+        <Route path="/crypto/:symbol" component={CryptoDetails} />
         <Route path="/404" component={NotFound} />
         {/* Final fallback route */}
         <Route component={NotFound} />
