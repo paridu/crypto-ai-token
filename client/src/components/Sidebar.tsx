@@ -13,13 +13,17 @@ import {
   BarChart3,
   Wallet,
   Activity,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
   const [location] = useLocation();
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const menuItems = [
     {
@@ -174,6 +178,25 @@ export default function Sidebar() {
               </p>
             </div>
           )}
+
+          <Button
+            onClick={toggleTheme}
+            variant="outline"
+            className="w-full bg-slate-700 hover:bg-slate-600 text-white border-slate-600 justify-center"
+            title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+          >
+            {theme === "light" ? (
+              <>
+                <Moon className="w-4 h-4 mr-2" />
+                Dark Mode
+              </>
+            ) : (
+              <>
+                <Sun className="w-4 h-4 mr-2" />
+                Light Mode
+              </>
+            )}
+          </Button>
 
           <Button
             onClick={() => {
