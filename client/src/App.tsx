@@ -5,7 +5,8 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import MainLayout from "./components/MainLayout";
-import Home from "./pages/Home";
+import { useAuth } from "@/_core/hooks/useAuth";
+
 import Dashboard from "./pages/DashboardEnhanced";
 import Watchlist from "./pages/Watchlist";
 import Alerts from "./pages/Alerts";
@@ -14,12 +15,17 @@ import Predictions from "./pages/Predictions";
 import Settings from "./pages/Settings";
 import Portfolio from "./pages/Portfolio";
 import CryptoDetails from "./pages/CryptoDetails";
+import Trading from "./pages/Trading";
+import Landing from "./pages/Landing";
+
 function Router() {
+  const { isAuthenticated } = useAuth();
+
   // make sure to consider if you need authentication for certain routes
   return (
     <MainLayout>
       <Switch>
-        <Route path="/" component={Dashboard} />
+        <Route path="/" component={isAuthenticated ? Dashboard : Landing} />
         <Route path="/dashboard-old" component={Dashboard} />
         <Route path="/watchlist" component={Watchlist} />
         <Route path="/alerts" component={Alerts} />
@@ -27,6 +33,7 @@ function Router() {
         <Route path="/predictions" component={Predictions} />
         <Route path="/portfolio" component={Portfolio} />
         <Route path="/settings" component={Settings} />
+        <Route path="/trading" component={Trading} />
         <Route path="/crypto/:symbol" component={CryptoDetails} />
         <Route path="/404" component={NotFound} />
         {/* Final fallback route */}
