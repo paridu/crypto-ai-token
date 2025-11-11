@@ -17,6 +17,8 @@ import Portfolio from "./pages/Portfolio";
 import CryptoDetails from "./pages/CryptoDetails";
 import Trading from "./pages/Trading";
 import Landing from "./pages/Landing";
+import RLDetails from "./pages/RLDetails";
+import AIInsights from "./pages/AIInsights";
 
 function Router() {
   const { isAuthenticated } = useAuth();
@@ -34,6 +36,8 @@ function Router() {
         <Route path="/portfolio" component={Portfolio} />
         <Route path="/settings" component={Settings} />
         <Route path="/trading" component={Trading} />
+        <Route path="/rl-details" component={RLDetails} />
+        <Route path="/ai-insights" component={AIInsights} />
         <Route path="/crypto/:symbol" component={CryptoDetails} />
         <Route path="/404" component={NotFound} />
         {/* Final fallback route */}

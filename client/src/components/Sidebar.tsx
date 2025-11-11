@@ -15,6 +15,7 @@ import {
   Activity,
   Moon,
   Sun,
+  Brain,
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -28,39 +29,51 @@ export default function Sidebar() {
   const menuItems = [
     {
       label: "Dashboard",
-      icon: LayoutDashboard,
       href: "/",
+      icon: LayoutDashboard,
       description: "Market overview & predictions",
     },
     {
       label: "Watchlist",
-      icon: Wallet,
       href: "/watchlist",
+      icon: Wallet,
       description: "Your favorite cryptos",
     },
     {
       label: "Predictions",
-      icon: TrendingUp,
       href: "/predictions",
+      icon: TrendingUp,
       description: "AI price forecasts",
     },
     {
       label: "Alerts",
-      icon: AlertCircle,
       href: "/alerts",
+      icon: AlertCircle,
       description: "Trading notifications",
     },
     {
       label: "Arbitrage",
-      icon: BarChart3,
       href: "/arbitrage",
+      icon: BarChart3,
       description: "Cross-exchange opportunities",
     },
     {
       label: "Automated Trading",
-      icon: Zap,
       href: "/trading",
+      icon: Activity,
       description: "Auto-execution engine",
+    },
+    {
+      label: "RL Details",
+      href: "/rl-details",
+      icon: Brain,
+      description: "Reinforcement learning analysis",
+    },
+    {
+      label: "AI Insights",
+      href: "/ai-insights",
+      icon: Zap,
+      description: "AI models opinions",
     },
   ];
 
