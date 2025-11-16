@@ -12,6 +12,14 @@ import {
   InsertTradingAlert,
   arbitrageOpportunities,
   InsertArbitrageOpportunity,
+  userExchangeAccounts,
+  InsertUserExchangeAccount,
+  accountBalances,
+  InsertAccountBalance,
+  liveOrders,
+  InsertLiveOrder,
+  tradingPerformance,
+  InsertTradingPerformance,
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -280,4 +288,168 @@ export async function updateArbitrageStatus(opportunityId: number, isActive: num
     .update(arbitrageOpportunities)
     .set({ isActive, updatedAt: new Date() })
     .where(eq(arbitrageOpportunities.id, opportunityId));
+}
+
+
+// User Exchange Accounts queries
+export async function getUserExchangeAccounts(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(userExchangeAccounts)
+    .where(eq(userExchangeAccounts.userId, userId));
+}
+
+export async function getExchangeAccount(userId: number, exchange: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(userExchangeAccounts)
+    .where(
+      and(
+        eq(userExchangeAccounts.userId, userId),
+        eq(userExchangeAccounts.exchange, exchange as any)
+      )
+    )
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function saveExchangeAccount(data: InsertUserExchangeAccount) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .insert(userExchangeAccounts)
+    .values(data)
+    .onDuplicateKeyUpdate({
+      set: {
+        apiKey: data.apiKey,
+        apiSecret: data.apiSecret,
+        passphrase: data.passphrase,
+        isActive: data.isActive,
+        updatedAt: new Date(),
+      },
+    });
+}
+
+// Account Balances queries
+export async function getAccountBalances(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(accountBalances)
+    .where(eq(accountBalances.userId, userId));
+}
+
+export async function getExchangeBalance(userId: number, exchange: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(accountBalances)
+    .where(
+      and(
+        eq(accountBalances.userId, userId),
+        eq(accountBalances.exchange, exchange as any)
+      )
+    );
+}
+
+export async function updateAccountBalance(data: InsertAccountBalance) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .insert(accountBalances)
+    .values(data)
+    .onDuplicateKeyUpdate({
+      set: {
+        available: data.available,
+        locked: data.locked,
+        total: data.total,
+        lastUpdated: new Date(),
+      },
+    });
+}
+
+// Live Orders queries
+export async function getUserOrders(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(liveOrders)
+    .where(eq(liveOrders.userId, userId))
+    .orderBy(liveOrders.createdAt);
+}
+
+export async function getOrdersByStatus(userId: number, status: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(liveOrders)
+    .where(
+      and(
+        eq(liveOrders.userId, userId),
+        eq(liveOrders.status, status as any)
+      )
+    );
+}
+
+export async function createLiveOrder(data: InsertLiveOrder) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(liveOrders).values(data);
+}
+
+export async function updateOrderStatus(orderId: number, status: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .update(liveOrders)
+    .set({ status: status as any, updatedAt: new Date() })
+    .where(eq(liveOrders.id, orderId));
+}
+
+// Trading Performance queries
+export async function getTradingPerformance(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(tradingPerformance)
+    .where(eq(tradingPerformance.userId, userId))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function initializeTradingPerformance(userId: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(tradingPerformance).values({
+    userId,
+    totalProfit: "0",
+    totalLoss: "0",
+    profitPercentage: "0",
+    totalTrades: 0,
+    successfulTrades: 0,
+    failedTrades: 0,
+    winRate: "0",
+    averageProfit: "0",
+  });
+}
+
+export async function updateTradingPerformance(
+  userId: number,
+  updates: Partial<InsertTradingPerformance>
+) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .update(tradingPerformance)
+    .set({ ...updates, lastUpdated: new Date() })
+    .where(eq(tradingPerformance.userId, userId));
 }

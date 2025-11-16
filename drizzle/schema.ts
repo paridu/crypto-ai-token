@@ -127,3 +127,88 @@ export const arbitrageOpportunities = mysqlTable("arbitrage_opportunities", {
 
 export type ArbitrageOpportunity = typeof arbitrageOpportunities.$inferSelect;
 export type InsertArbitrageOpportunity = typeof arbitrageOpportunities.$inferInsert;
+
+/**
+ * User Exchange Accounts table
+ * Stores API keys and connection info for each exchange
+ */
+export const userExchangeAccounts = mysqlTable("user_exchange_accounts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  exchange: mysqlEnum("exchange", ["binance", "coinbase", "kraken"]).notNull(),
+  apiKey: text("apiKey").notNull(), // Encrypted
+  apiSecret: text("apiSecret").notNull(), // Encrypted
+  passphrase: text("passphrase"), // For Kraken
+  isActive: int("isActive").default(1).notNull(),
+  lastVerified: timestamp("lastVerified"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserExchangeAccount = typeof userExchangeAccounts.$inferSelect;
+export type InsertUserExchangeAccount = typeof userExchangeAccounts.$inferInsert;
+
+/**
+ * Account Balances table
+ * Tracks balance across different exchanges
+ */
+export const accountBalances = mysqlTable("account_balances", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  exchange: mysqlEnum("exchange", ["binance", "coinbase", "kraken"]).notNull(),
+  currency: varchar("currency", { length: 20 }).notNull(), // USDT, USD, etc.
+  available: decimal("available", { precision: 20, scale: 8 }).notNull(),
+  locked: decimal("locked", { precision: 20, scale: 8 }).notNull(),
+  total: decimal("total", { precision: 20, scale: 8 }).notNull(),
+  lastUpdated: timestamp("lastUpdated").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AccountBalance = typeof accountBalances.$inferSelect;
+export type InsertAccountBalance = typeof accountBalances.$inferInsert;
+
+/**
+ * Live Orders table
+ * Tracks all real orders placed on exchanges
+ */
+export const liveOrders = mysqlTable("live_orders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  orderId: varchar("orderId", { length: 100 }).notNull(), // Exchange order ID
+  exchange: mysqlEnum("exchange", ["binance", "coinbase", "kraken"]).notNull(),
+  symbol: varchar("symbol", { length: 20 }).notNull(), // e.g., BTC/USDT
+  type: mysqlEnum("type", ["buy", "sell"]).notNull(),
+  quantity: decimal("quantity", { precision: 20, scale: 8 }).notNull(),
+  price: decimal("price", { precision: 20, scale: 8 }).notNull(),
+  status: mysqlEnum("status", ["pending", "completed", "cancelled", "failed"]).notNull(),
+  fee: decimal("fee", { precision: 20, scale: 8 }).notNull(),
+  total: decimal("total", { precision: 20, scale: 8 }).notNull(),
+  executedAt: timestamp("executedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type LiveOrder = typeof liveOrders.$inferSelect;
+export type InsertLiveOrder = typeof liveOrders.$inferInsert;
+
+/**
+ * Trading Performance table
+ * Tracks profit/loss and performance metrics
+ */
+export const tradingPerformance = mysqlTable("trading_performance", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  totalProfit: decimal("totalProfit", { precision: 20, scale: 8 }).notNull().default("0"),
+  totalLoss: decimal("totalLoss", { precision: 20, scale: 8 }).notNull().default("0"),
+  profitPercentage: decimal("profitPercentage", { precision: 10, scale: 2 }).notNull().default("0"),
+  totalTrades: int("totalTrades").notNull().default(0),
+  successfulTrades: int("successfulTrades").notNull().default(0),
+  failedTrades: int("failedTrades").notNull().default(0),
+  winRate: decimal("winRate", { precision: 10, scale: 2 }).notNull().default("0"),
+  averageProfit: decimal("averageProfit", { precision: 20, scale: 8 }).notNull().default("0"),
+  lastUpdated: timestamp("lastUpdated").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TradingPerformance = typeof tradingPerformance.$inferSelect;
+export type InsertTradingPerformance = typeof tradingPerformance.$inferInsert;

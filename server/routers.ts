@@ -3,6 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { tradingRouter } from "./routers/tradingRouter";
+import { liveTradeRouter } from "./routers/liveTrading";
 import { z } from "zod";
 import {
   getCryptoPrices,
@@ -135,6 +136,7 @@ export const appRouter = router({
   }),
 
   trading: tradingRouter,
+  liveTrade: liveTradeRouter,
 });
 
 export type AppRouter = typeof appRouter;

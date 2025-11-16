@@ -16,6 +16,7 @@ import Settings from "./pages/Settings";
 import Portfolio from "./pages/Portfolio";
 import CryptoDetails from "./pages/CryptoDetails";
 import Trading from "./pages/Trading";
+import LiveTrading from "./pages/LiveTrading";
 import Landing from "./pages/Landing";
 import RLDetails from "./pages/RLDetails";
 import AIInsights from "./pages/AIInsights";
@@ -36,6 +37,7 @@ function Router() {
         <Route path="/portfolio" component={Portfolio} />
         <Route path="/settings" component={Settings} />
         <Route path="/trading" component={Trading} />
+        <Route path="/live-trading" component={LiveTrading} />
         <Route path="/rl-details" component={RLDetails} />
         <Route path="/ai-insights" component={AIInsights} />
         <Route path="/crypto/:symbol" component={CryptoDetails} />

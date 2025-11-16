@@ -16,6 +16,7 @@ import {
   Moon,
   Sun,
   Brain,
+  DollarSign,
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -62,6 +63,12 @@ export default function Sidebar() {
       href: "/trading",
       icon: Activity,
       description: "Auto-execution engine",
+    },
+    {
+      label: "Live Trading",
+      href: "/live-trading",
+      icon: DollarSign,
+      description: "Real-time order execution",
     },
     {
       label: "RL Details",
