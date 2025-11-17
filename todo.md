@@ -33,6 +33,7 @@
 - [x] Create Watchlist page (manage user's crypto watchlist)
 - [x] Create Trading Alerts page (manage trading alerts)
 - [x] Create Arbitrage Opportunities page (display arbitrage opportunities with sorting)
+- [x] Improve Arbitrage page UI with advanced filters and statistics
 - [ ] Create Price Chart component (display price history with chart)
 - [ ] Create Crypto Details page (detailed view for single crypto)
 
